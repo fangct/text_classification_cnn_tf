@@ -51,7 +51,7 @@ class CNN_MODEL(object):
         output_pool = []
         for filter_size in self.filter_sizes:
             with tf.variable_scope('conv-maxpool-%s' % filter_size, reuse=tf.AUTO_REUSE):
-                filter_shape = [filter_size, self.embed_dim, 1, self.filter_nums]
+                filter_shape = [ filter_size, self.embed_dim, 1, self.filter_nums]
                 W_conv = tf.get_variable(shape=filter_shape, initializer=tf.truncated_normal_initializer(-0.1, 0.1), name='W_conv')
                 b_conv = tf.get_variable(shape=self.filter_nums, initializer=tf.constant_initializer(0.1), name='b_conv')
 
@@ -106,6 +106,7 @@ class CNN_MODEL(object):
         if not os.path.exists(path):
             os.mkdir(path)
         self.saver.save(self.sess, path)
+
 
     def gen_batch(self, data, batch_size):
         data = [np.array(d) for d in data]

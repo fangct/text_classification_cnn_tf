@@ -99,69 +99,6 @@ def pad_sentence(sentence, max_len, PAD_ID):
 
     return new_sentence
 
-class text_dataset():
-    def __init__(self, datafile, max_len, vocab):
-        self.datafile = datafile
-        self.max_len = max_len
-        self.length=None
-        self.vocab = vocab
-
-    def iter_file(self, filename):
-        with open(filename, encoding='utf8') as f:
-            for line in f:
-                line = line.strip().split("\t")
-                label = int(line[0])
-                sentence = [int(value) for value in line[1].split(' ')]
-                new_sentence = pad_sentence(sentence,max_len=self.max_len, PAD_ID=self.vocab['PAD'])
-                yield new_sentence,label
-
-    def __iter__(self):
-        file_iter = self.iter_file(self.datafile)
-        for text, label in file_iter:
-            yield text, label
-
-    def __len__(self):
-        """
-        Iterates once over the corpus to set and store length
-        """
-        if self.length is None:
-            self.length = 0
-            for _ in self:
-                self.length += 1
-        return self.length
-
-class prepare_data(object):
-    def __init__(self, path, max_sent_len, vocab):
-        self.sent_len = max_sent_len
-        self.path = path
-        self.vocab = vocab
-        self.length = None
-
-    def _generate_data(self, data_path):
-        with open(data_path, 'r', encoding='utf-8') as f_r:
-            for line in f_r:
-                line = line.strip().split('\t')
-                label = int(line[0])
-                sentence = [int(value) for value in line[1:]]
-                new_sentence = pad_sentence(sentence, self.sent_len, self.vocab['PAD'])
-
-                yield new_sentence, label
-
-    def generate_data(self):
-        generate = self._generate_data(self.path)
-        for sentence, label in generate:
-            yield sentence, label
-
-    def __len__(self):
-        """
-        Iterates once over the corpus to set and store length
-        """
-        if self.length is None:
-            self.length = 0
-            for _ in self:
-                self.length += 1
-        return self.length
-
 
 def generate_data(data_path, sent_len, vocab):
     x = []
@@ -180,9 +117,6 @@ def generate_data(data_path, sent_len, vocab):
             x.append(new_sentence)
 
     return (x, y)
-
-
-
 
 if __name__ == '__main__':
 
